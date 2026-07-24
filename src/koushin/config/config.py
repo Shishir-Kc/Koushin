@@ -1,9 +1,6 @@
 """
 This file will be responsible for creating config.koushin 
 
-Note:   working on to create reading config.koushin
-
-
 """
 from pathlib import Path
 import configparser

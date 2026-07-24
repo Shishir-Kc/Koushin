@@ -5,6 +5,12 @@ This file will be responsible for creating config.koushin
 from pathlib import Path
 import configparser
 
+def generate_raw_github_content(github:str):
+   """  
+        This fucntion will generate raw github content for config.koushin
+   """
+   koushin_path = f"{github.replace("github","raw.githubusercontent")}/refs/heads/main/config.koushin"
+   return koushin_path
 
 def create_config(github:str,path = Path.cwd()):
     """ 
@@ -17,15 +23,13 @@ def create_config(github:str,path = Path.cwd()):
 
     """
     repo = github or "https://github.com/Shishir-Kc/Koushin" 
-    version_manager = f"{repo}/config.koushin"
-    TEMPLATE = f"""
-    
+    version_manager = generate_raw_github_content(github)
+    TEMPLATE = f""" 
 [github]
 repo = {repo}
 [version]
 version-manager = {version_manager}
-version = 0.0.1
-     
+version = 0.0.1 
 """
     with open(f"{path}/config.koushin","w")as file:
         file.write(TEMPLATE)        
@@ -53,5 +57,6 @@ def read_config(path = Path.cwd()):
         "version":config["version"]["version"]
     }
 
-# create_config(github="https://github.com/Shishir-Kc/Koushin")
-read_config()
+create_config(github="https://github.com/Shishir-Kc/Koushin")
+
+

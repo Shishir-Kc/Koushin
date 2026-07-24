@@ -1,0 +1,8 @@
+
+    
+[github]
+repo = https://github.com/Shishir-Kc/Koushin
+[version]
+version-manager = https://github.com/Shishir-Kc/Koushin/config.koushin
+version = 0.0.1
+     

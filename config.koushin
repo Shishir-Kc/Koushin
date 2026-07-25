@@ -6,7 +6,7 @@ name = koushin
 
 [version]
 version-manager = https://raw.githubusercontent.com/Shishir-Kc/Koushin/refs/heads/main/config.koushin
-version = 0.0.1
+version = 1.0.0
 
 [path]
 install-path = /home/x64_x86/.config/koushin

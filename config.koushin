@@ -1,8 +1,13 @@
- 
 [github]
 repo = https://github.com/Shishir-Kc/Koushin
+
+[project]
+name = koushin
+
 [version]
 version-manager = https://raw.githubusercontent.com/Shishir-Kc/Koushin/refs/heads/main/config.koushin
-version = 0.0.3
+version = 0.0.1
+
 [path]
-install-path = asdasd
+install-path = /home/x64_x86/.config/koushin
+

@@ -1,9 +1,9 @@
 [project]
 name = "koushin"
-version = "0.0.1"
+version = "0.0.8"
 description = "A simple version manager"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
     "requests>=2.34.2",
 ]
@@ -12,3 +12,6 @@ dependencies = [
 members = [
     "koushin",
 ]
+
+[project.scripts]
+koushin = "koushin.main:main"

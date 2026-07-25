@@ -59,4 +59,8 @@ def read_config(path = Path.cwd()):
 
 create_config(github="https://github.com/Shishir-Kc/Koushin")
 
+def get_config():
+    """ 
+        This function will get the cloud (github) config
+    """
 

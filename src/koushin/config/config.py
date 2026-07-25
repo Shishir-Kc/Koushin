@@ -4,6 +4,7 @@ This file will be responsible for creating config.koushin
 """
 from pathlib import Path
 import configparser
+import requests
 
 def generate_raw_github_content(github:str):
    """  
@@ -37,13 +38,13 @@ version = 0.0.1
 def read_config(path = Path.cwd()):
     """
     
-    This function will read config.koushin and will return the following:
+    This function will read config.koushin (Local)  and will return the following:
     
     Returns:
     
     github : github repo for the project 
 
-    version-manager : will return config.kosun raw file 
+    version-manager : will return config.kosun raw github url  
 
     version : current version 
 
@@ -57,10 +58,32 @@ def read_config(path = Path.cwd()):
         "version":config["version"]["version"]
     }
 
-create_config(github="https://github.com/Shishir-Kc/Koushin")
 
 def get_config():
     """ 
-        This function will get the cloud (github) config
+    This function will get the cloud (github) config.koushin
+
+    Returns:
+    
+    github : github repo for the project 
+
+    version-manager : will return config.kosun raw github url 
+
+    version : cloud (github) version 
+
     """
+    config = configparser.ConfigParser()
+    raw_config_url = str(read_config().get("version-manager"))
+    try:
+        response = requests.get(raw_config_url)
+        if response.status_code == 200:
+            config.read_string(response.text)
+            return {
+             "github":config["github"]["repo"],
+             "version-manager":config["version"]["version-manager"],
+             "version":config["version"]["version"]
+    }
+    except Exception as e:
+        print(e)
+
 

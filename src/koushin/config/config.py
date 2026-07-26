@@ -13,7 +13,7 @@ def generate_raw_github_content(github:str):
    koushin_path = f"{github.replace("github","raw.githubusercontent")}/refs/heads/main/config.koushin"
    return koushin_path
 
-def create_config(github:str,project_name:str):
+def create_config(github:str,project_name:str,project_path:str):
     """ 
     This function will create config.koushin which will contain the following
     
@@ -23,7 +23,7 @@ def create_config(github:str,project_name:str):
      
     project_name : name of the project 
 
-    project_path : path where client will install the project (by default it will be default val developer will have to add the project_path for client ) 
+    project_path : path where client will install the project add the project installation path it will genearte full path from home to the path specified during update on client side  
     
     Hint:
 
@@ -33,7 +33,7 @@ def create_config(github:str,project_name:str):
     path = Path.cwd()
     repo = github or "https://github.com/Shishir-Kc/Koushin" 
     version_manager = generate_raw_github_content(github)
-    install_path = "path/where/user/will/install/this/project"
+    install_path = project_path or "path/where/user/will/install/this/project"
     TEMPLATE = f""" 
 [github]
 repo = {repo}
@@ -77,16 +77,12 @@ def read_config():
 
 def add_install_path(path):
     """
-        This function will add the installation path of the client machine use this when 
-        the main code runs in client machine for the first time ! , by default it will have  ' home/username '
-        full path specification is suggested.
+        This function will add the installation_path in the config.koushin 
     """
 
     config = configparser.ConfigParser()
     config.read(f"{Path.cwd()}/config.koushin")
-    installation_path = str(Path.home() / path)
-
-    config.set('path','install-path',installation_path)
+    config.set('path','install-path',path)
     with open(f"{Path.cwd()}/config.koushin","w") as configfile:
         config.write(configfile)
 
@@ -146,7 +142,4 @@ def generate_clean_path(path:str,project_name)->str:
     return path.replace(f"/{project_name}","")
 
     
-# print(generate_clean_path(path="/home/x64_x86/.config/koushin",project_name="koushin"))
 
-# add_install_path(".config/koushin")
-# create_config(github="https://github.com/Shishir-Kc/Koushin",project_name="koushin")

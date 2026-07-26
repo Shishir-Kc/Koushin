@@ -3,8 +3,8 @@ This file will have logic for the following :
 check current version , and update 
 
 """
-from re import sub
-from src.koushin.config.config import (
+
+from koushin.config.config import (
     read_config, get_config,
     conversion, generate_clean_path 
 )
@@ -47,7 +47,7 @@ class Updater:
         if conversion(cloud_version) > conversion(local_version):
             local_installation_path = local_metadata.get("install_path","")
             project_name = local_metadata.get("project_name","")
-            installation_path = generate_clean_path(path=local_installation_path,project_name=project_name)
+            installation_path = Path.home() / generate_clean_path(path=local_installation_path,project_name=project_name)
             print(f"new update will be installed for {project_name} on {installation_path} form repo {github_repo}")
             for entry in os.scandir(local_installation_path):
                 if entry.is_dir(follow_symlinks=False):

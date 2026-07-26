@@ -21,7 +21,7 @@ def create_config(github:str,project_name:str,project_path:str):
     
     github : github link forr the project 
      
-    project_name : name of the project 
+    project_name : name of the project (should be same as repo nam ) 
 
     project_path : path where client will install the project add the project installation path it will genearte full path from home to the path specified during update on client side  
     
@@ -139,7 +139,8 @@ def generate_clean_path(path:str,project_name)->str:
 
 
     """
-    return path.replace(f"/{project_name}","")
+
+    return str(path).replace(f"/{project_name}","")
 
     
-
+# create_config(github="https://github.com/Shishir-Kc/Koushin",project_name="Koushin",project_path="test/koushin")

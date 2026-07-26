@@ -4,7 +4,7 @@ check current version , and update
 
 """
 
-from koushin.config.config import (
+from src.koushin.config.config import (
     read_config, get_config,
     conversion
 )

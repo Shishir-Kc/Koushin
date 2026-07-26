@@ -1,13 +1,10 @@
+ 
 [github]
 repo = https://github.com/Shishir-Kc/Koushin
-
 [project]
-name = koushin
-
+name = Koushin
 [version]
 version-manager = https://raw.githubusercontent.com/Shishir-Kc/Koushin/refs/heads/main/config.koushin
-version = 1.0.0
-
+version = 0.0.1 
 [path]
-install-path = /home/x64_x86/.config/koushin
-
+install-path = test/koushin

@@ -8,7 +8,7 @@ from koushin.config.config import (
     read_config, get_config,
     conversion
 )
-import requests , zipfile,io,shutil,os
+import requests , zipfile,io,shutil
 from pathlib import Path
 import subprocess
 
@@ -63,38 +63,27 @@ class Updater:
         12) moves the content from temp to local installation_path
         13) removes the temp dir
         """
-
-        if os.path.exists("temp_extraction"):
-            shutil.rmtree("temp_extraction")
-
         local_metadata = read_config()
-        repo = local_metadata.get("github")
+        repo_url = local_metadata.get("github")
         loacl_installation_path = Path.home() / local_metadata.get("install_path") #type:ignore
-        owner, repo = repo.strip("/").split("/")[-2:] #type:ignore
+        owner, repo = repo_url.strip("/").split("/")[-2:] #type:ignore
         zip_url = f"https://github.com/{owner}/{repo}/archive/refs/heads/main.zip"
-
+        temp_dir = Path.home() / ".cache/koushin"
         response = requests.get(zip_url)
         if response.status_code != 200:
             raise Exception("Could not find the main branch")
 
         with zipfile.ZipFile(io.BytesIO(response.content)) as z:
-            z.extractall("temp_extraction")
+            z.extractall(temp_dir)
 
-        extracted_folder = os.path.join("temp_extraction", f"{repo}-main")
-
-        if not os.path.exists(extracted_folder):
-            actual = os.listdir("temp_extraction")
-            shutil.rmtree("temp_extraction")
-            raise Exception(
-                f"Download/extraction failed — expected '{extracted_folder}' "
-                f"but found {actual}. Existing installation left untouched."
-            )
-
-        if os.path.exists(loacl_installation_path):
+        if loacl_installation_path.exists():
             shutil.rmtree(loacl_installation_path)
+            print("removing old version ")
 
-        shutil.move(extracted_folder, loacl_installation_path)
-        shutil.rmtree("temp_extraction")
+        content = temp_dir / f"{repo}-main"
+        shutil.copytree(content,loacl_installation_path,symlinks=False)
+        print("removing .cache ")
+        shutil.rmtree(temp_dir)
         subprocess.run(['uv', 'sync'], cwd=loacl_installation_path, check=True)
 
     def update(self):
@@ -105,8 +94,11 @@ class Updater:
             try:
                 self._doownload()
             except Exception as e:
-                print(f"Update failed: {e}")
-                print("Existing installation was not touched.")
+                return {
+                    "error":e
+
+                }
         else:
-            print("Update not available")
-       
+            return{
+                "status":False
+            }

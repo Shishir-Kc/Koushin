@@ -142,5 +142,4 @@ def generate_clean_path(path:str,project_name)->str:
 
     return str(path).replace(f"/{project_name}","")
 
-    
-# create_config(github="https://github.com/Shishir-Kc/Koushin",project_name="Koushin",project_path="test/koushin")
+

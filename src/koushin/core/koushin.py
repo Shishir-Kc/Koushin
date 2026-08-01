@@ -11,6 +11,9 @@ from koushin.config.config import (
 import requests , zipfile,io,shutil
 from pathlib import Path
 import subprocess
+from logger_config import setup_logger
+
+logger = setup_logger(__name__)
 
 class Updater:
     def __init__(self) -> None:
@@ -27,10 +30,14 @@ class Updater:
             }
 
         """
-        project_metadata= read_config()
-        return {
+        try:
+         project_metadata= read_config()
+         return {
             "current_version":project_metadata.get("version","")
         }
+        except Exception as e:
+            logger.error(e)
+            return {}
 
     def check_update(self)->bool:
         """
@@ -38,6 +45,7 @@ class Updater:
             if there is an update then it will return True else False
 
         """
+        logger.info("Checking update")
         local_metadata = read_config()
         cloud_metadata = get_config()
         local_version = local_metadata.get("version","")
@@ -47,6 +55,7 @@ class Updater:
         else: 
             return False
     def _doownload(self):
+        logger.info("Downloading new version")
         """
         Thin internal method will download the project:
         1) reads the local config
@@ -78,11 +87,11 @@ class Updater:
 
         if loacl_installation_path.exists():
             shutil.rmtree(loacl_installation_path)
-            print("removing old version ")
+            logger.info("removing old version ")
 
         content = temp_dir / f"{repo}-main"
         shutil.copytree(content,loacl_installation_path,symlinks=False)
-        print("removing .cache ")
+        logger.info("removing .cache ")
         shutil.rmtree(temp_dir)
         subprocess.run(['uv', 'sync'], cwd=loacl_installation_path, check=True)
 

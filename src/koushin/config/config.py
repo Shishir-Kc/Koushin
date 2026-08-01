@@ -127,7 +127,6 @@ def get_config():
              "install_path":config["path"]["install-path"],
              "project_name": config["project"]["name"]   
            }
-    
 
     except Exception as e:
         logger.error(e)

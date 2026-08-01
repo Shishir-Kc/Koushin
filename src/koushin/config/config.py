@@ -5,12 +5,17 @@ This file will be responsible for creating config.koushin
 from pathlib import Path
 import configparser
 import requests
+import os 
+from logger_config import setup_logger
+
+logger = setup_logger(name=__name__)
 
 def generate_raw_github_content(github:str):
    """  
         This fucntion will generate raw github content for config.koushin
    """
    koushin_path = f"{github.replace("github","raw.githubusercontent")}/refs/heads/main/config.koushin"
+   logger.info("generating koushin_path")
    return koushin_path
 
 def create_config(github:str,project_name:str,project_path:str):
@@ -45,9 +50,12 @@ version = 0.0.1
 [path]
 install-path = {install_path}
 """
-    with open(f"{path}/config.koushin","w")as file:
+    logger.info("Creating config.koushin ")
+    try:
+     with open(f"{path}/config.koushin","w")as file:
         file.write(TEMPLATE)        
-
+    except Exception as e:
+        logger.error(e)
 def read_config():
     """
     
@@ -66,6 +74,7 @@ def read_config():
     """
 
     config= configparser.ConfigParser()
+    logger.info("reading config.koushin")
     config.read(f"{Path.cwd()}/config.koushin")
     return {
         "github":config["github"]["repo"],
@@ -79,13 +88,15 @@ def add_install_path(path):
     """
         This function will add the installation_path in the config.koushin 
     """
-
+    logger.info("adding install-path")
     config = configparser.ConfigParser()
     config.read(f"{Path.cwd()}/config.koushin")
     config.set('path','install-path',path)
-    with open(f"{Path.cwd()}/config.koushin","w") as configfile:
+    try:
+     with open(f"{Path.cwd()}/config.koushin","w") as configfile:
         config.write(configfile)
-
+    except Exception as e:
+        logger.error(e)
 
 def get_config():
     """ 
@@ -104,8 +115,10 @@ def get_config():
     config = configparser.ConfigParser()
     raw_config_url = str(read_config().get("version-manager"))
     try:
+        logger.info("Getting config from github")
         response = requests.get(raw_config_url)
         if response.status_code == 200:
+            logger.info("Got config from git ")
             config.read_string(response.text)
             return {
              "github":config["github"]["repo"],
@@ -117,12 +130,13 @@ def get_config():
     
 
     except Exception as e:
-        print(e)
+        logger.error(e)
 
 def conversion(v):
     """ 
         This will convert str to int using map  
     """
+    logger.info("Convering ....")
     return tuple(map(int,v.split(".")))
 
 def generate_clean_path(path:str,project_name)->str:
@@ -139,7 +153,22 @@ def generate_clean_path(path:str,project_name)->str:
 
 
     """
-
+    logger.info("generating clean path ")
     return str(path).replace(f"/{project_name}","")
 
+def cretate_logger_file():
+    """
+
+        This fucntion will create a LOG directory in which logs for koushin will be 
+        stored there ! make sure to add LOG dir in .gitignore
+        
+        Returns:
+
+        Log path 
+
+    """
+    path = Path.cwd()
+    log_path = path /"LOG"
+    os.makedirs(log_path,exist_ok=True)
+    return log_path
 

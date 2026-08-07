@@ -75,7 +75,10 @@ def read_config():
 
     config= configparser.ConfigParser()
     logger.info("reading config.koushin")
-    config.read(f"{Path.cwd()}/config.koushin")
+    try:
+     config.read(f"{Path.cwd()}/config.koushin")
+    except  Exception as e:
+        logger.error(f"Could`nt find config.koushin{e}")
     return {
         "github":config["github"]["repo"],
         "version-manager":config["version"]["version-manager"],
